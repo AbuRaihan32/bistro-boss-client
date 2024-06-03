@@ -1,14 +1,41 @@
+import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../../Hooks/useAuth";
+import { FaShoppingCart } from "react-icons/fa";
+import useCarts from "../../../Hooks/useCarts";
+
 const Navbar = () => {
+  const { user, logoutUser } = useAuth();
+  const [carts, isLoading] = useCarts();
+
   const navLinks = (
     <>
       <li>
-        <a>Item 1</a>
+        <NavLink to={"/"}>Home</NavLink>
       </li>
       <li>
-        <a>Item 3</a>
+        <NavLink to={"/menu"}>Menu</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/order/salads"}>Order Food</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/login"}>Login</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/signUp"}>Sign Up</NavLink>
       </li>
     </>
   );
+
+  const handleSignOut = () => {
+    logoutUser()
+      .then(() => {
+        alert("sign out");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   return (
     <>
@@ -44,7 +71,34 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{navLinks}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn btn-outline text-white">Button</a>
+          {/* shopping cart */}
+          <Link to={"/dashboard/cart"}>
+            <button className="btn btn-outline text-white mr-4">
+              <FaShoppingCart></FaShoppingCart>
+              <div className="badge badge-secondary">
+                +
+                {isLoading ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  carts.length
+                )}
+              </div>
+            </button>
+          </Link>
+          {user ? (
+            <>
+              <button
+                onClick={handleSignOut}
+                className="btn btn-outline text-white"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link to={"/login"}>
+              <button className="btn btn-outline text-white">Login</button>
+            </Link>
+          )}
         </div>
       </div>
     </>

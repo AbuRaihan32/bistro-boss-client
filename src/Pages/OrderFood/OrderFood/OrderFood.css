@@ -1,0 +1,5 @@
+.react-tabs__tab--selected{
+    border-color: chartreuse;
+    color: rgb(0, 255, 34);
+    font-weight: bold;
+}
